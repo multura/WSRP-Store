@@ -10,7 +10,14 @@
     <style>
         .store-container {
             height: 375px;
+	    margin: 20px;
         }
+	.app-box {
+	    height: 330px;
+	}
+	.invisibleLink {
+	    align: left;
+	}
     </style>
 </head>
 <body>
@@ -18,8 +25,8 @@
 	<div class="header-left">
 	    <img src="res/logo.png" alt="Store Logo">
 	    <a href="store.html" class="bgGreen"><h1>Home</h1></a>
-	    <a href="comingSoon.xaml" class="topLink"><h1>Top Charts</h1></a>
-	    <a href="comingSoon.xaml" class="topLink"><h1>Categories</h1></a>
+	    <a href="pages/topcharts.html" class="topLink"><h1>Top Charts</h1></a>
+	    <a href="pages/categories.html" class="topLink"><h1>Categories</h1></a>
 	    <a href="comingSoon.xaml" class="topLink"><h1>Collections</h1></a>
 	    <a href="account.html"class="topLink"><h1>Account</h1></a>
 	</div>
@@ -31,10 +38,34 @@
     <h1 class="pageTitle"><a id="back-button" class="back-button" onclick="history.back()"><img src="res/ui/back_button_default.png"></a>My Apps</h1>
     <div class="store-container">
         <div class="app-box">
-            <img src="https://microsoftwarestudios.github.io/winstore/appRes/weather/StoreLogo.png" />
-            <h3>Bing Weather</h3>
+            <img src="https://microsoftwarestudios.github.io/winstore/update/bing/weather/StoreLogo.png" />
+            <h3>Weather</h3>
             <p>Update Available</p>
-            <a class="WindowsMetroUIButton" href="https://microsoftwarestudios.github.io/winstore/install/msnweather.ps1">Update</a>
+            <a class="invisibleLink" href="https://microsoftwarestudios.github.io/winstore/install/msnweather.ps1"><button class="WindowsMetroUIButton">Update</button></a>
+        </div>
+	<div class="app-box">
+            <img src="https://microsoftwarestudios.github.io/winstore/update/bing/news/StoreLogo.png" />
+            <h3>News</h3>
+            <p>Update Available</p>
+            <a class="invisibleLink" href="https://microsoftwarestudios.github.io/winstore/install/msnnews.ps1"><button class="WindowsMetroUIButton">Update</button></a>
+        </div>
+	<div class="app-box">
+            <img src="https://microsoftwarestudios.github.io/winstore/update/bing/money/StoreLogo.png" />
+            <h3>Finance</h3>
+            <p>Update Available</p>
+            <a class="invisibleLink" href="https://microsoftwarestudios.github.io/winstore/install/msnmoney.ps1"><button class="WindowsMetroUIButton">Update</button></a>
+        </div>
+	<div class="app-box">
+            <img src="https://microsoftwarestudios.github.io/winstore/update/bing/sports/StoreLogo.png" />
+            <h3>Sports</h3>
+            <p>Update Available</p>
+            <a class="invisibleLink" href="https://microsoftwarestudios.github.io/winstore/install/msnsports.ps1"><button class="WindowsMetroUIButton">Update</button></a>
+        </div>
+	<div class="app-box">
+            <img src="https://microsoftwarestudios.github.io/winstore/update/bing/food-drink/StoreLogo.png" />
+            <h3>Food + Drink</h3>
+            <p>Update Available</p>
+            <a class="invisibleLink" href="https://microsoftwarestudios.github.io/winstore/install/msnfood-drink.ps1"><button class="WindowsMetroUIButton">Update</button></a>
         </div>
     </div>
 </body>

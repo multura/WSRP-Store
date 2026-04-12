@@ -9,134 +9,226 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-        .search-bar {
-            position: relative;
-            display: inline-block;
-        }
-
-        #search-input {
-            padding-right: 30px; /* Space for the icon */
-            width: 300px;
-            height: 15px;
-            font-size: 16px;
-        }
-
-        .search-bar i {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: gray;
-        }
-
+        .search-bar { position: relative; display: inline-block; }
+        #search-input { padding-right: 30px; width: 300px; height: 15px; font-size: 16px; }
+        .search-bar i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: gray; }
     </style>
+<style>
+    /* Metro Hero Container */
+    .featured-hero {
+	display: inline-block;
+    float: left;
+    width: 500px;
+    height: 330px;
+    margin: 10px;
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-top: 300px
+
+    /* Increased internal spacing */
+    padding: 25px;
+
+    text-align: left;
+    background: #fff;
+
+    /* Invisible border to prevent layout shift */
+    border: 3px solid transparent;
+
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+    /* Modern UI Image handling */
+    .featured-hero img { 
+        width: 100%;  
+    }
+
+    .featured-caption {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 15px;
+        color: light-gray;
+    }
+
+    .featured-caption h2 {
+    	padding-left: 5px;
+    }
+
+    /* Subtle hover effect for IE10 */
+    .featured-hero:hover {
+        outline: 3px solid #ccc;
+    }
+
+/* Scroll Container */
+.horizontalScroll {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    padding: 10px;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    height: 600px; 
+    
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+#app-list .app-box {
+    display: inline-block !important;
+    vertical-align: top;
+    white-space: normal;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    box-sizing: content-box; 
+}
+.app-column {
+    display: inline-block;    vertical-align: top;
+    white-space: normal;   
+    margin-right: 15px;}
+</style>
 </head>
 
-<script>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <img src="res/logo.png" alt="Store Logo">
+            <a href="store.html" class="bgGreen"><h1>Home</h1></a>
+            <a href="pages/topcharts.html" class="topLink"><h1>Top Charts</h1></a>
+            <a href="pages/categories.html" class="topLink"><h1>Categories</h1></a>
+            <a href="comingSoon.xaml" class="topLink"><h1>Collections</h1></a>
+            <a href="account.html" class="topLink"><h1>Account</h1></a>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search-input" onkeyup="searchApps()" placeholder="Search for apps...">
+            <a href="errorPage.xaml"><i class="fa fa-search"></i></a>
+        </div>
+    </div>
+
+    <h1 class="pageTitle">Store</h1>
+    <div class="horizontalScroll">
+	<div id="featured-container"></div>
+	<h1 class="pageTitle">Apps</h1>
+	<div id="app-list" class="store-container"></div>
+    </div>
+
+<script type="text/javascript">
     function searchApps() {
-        var query = document.getElementById("search-input").value.toLowerCase();
-        var apps = document.getElementsByClassName("app-box");
-
-        for (var app of apps); {
-            var name = app.getAttribute("data-name");
-            var category = app.getAttribute("data-category");
-
-            if (name.includes(query) || category.includes(query)) {
-                app.style.display = "inline-block";
-        } else {
-                app.style.display = "none";
+        var input = document.getElementById("search-input");
+        var filter = input.value.toLowerCase();
+        var apps = document.querySelectorAll(".app-box"); 
+        for (var i = 0; i < apps.length; i++) {
+            var title = apps[i].getElementsByTagName("h3")[0] || apps[i].getElementsByTagName("span")[0];
+            if (title) {
+                var textValue = title.textContent || title.innerText;
+                if (textValue.toLowerCase().indexOf(filter) > -1) {
+                    apps[i].style.display = ""; 
+                } else {
+                    apps[i].style.display = "none"; 
+                }
+            }
         }
-</script>
+    }
 
+    function loadFeatured() {
+        var xhr = new XMLHttpRequest();
+        // IE10 cache buster
+        xhr.open("GET", "https://microsoftwarestudios.github.io/winstore/featured.xml", true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var xml = xhr.responseXML;
+                // Fallback for older parsing if responseXML fails
+                if (!xml || !xml.documentElement) {
+                    if (typeof DOMParser !== "undefined") {
+                        xml = new DOMParser().parseFromString(xhr.responseText, "text/xml");
+                    }
+                }
 
+                var mainItem = xml.getElementsByTagName("mainItem")[0];
+                if (mainItem) {
+                    var img = mainItem.getElementsByTagName("image")[0].childNodes[0].nodeValue;
+                    var cap = mainItem.getElementsByTagName("caption")[0].childNodes[0].nodeValue;
+                    
+                    var featHtml = '<div class="featured-hero">' +
+                                   '<img src="' + img + '" alt="Featured">' +
+                                   '<div class="featured-caption"><h2>' + cap + '</h2></div>' +
+                                   '</div>';
+                    document.getElementById("featured-container").innerHTML = featHtml;
+                }
+            }
+        };
+        xhr.send();
+    }
 
-<script>
     function loadXML() {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "https://microsoftwarestudios.github.io/winstore/data.xml", true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
-                var xml;
-                if (typeof DOMParser !== "undefined") {
+                var xml = xhr.responseXML;
+                if (!xml || !xml.documentElement) {
                     xml = new DOMParser().parseFromString(xhr.responseText, "text/xml");
-                } else {
-                    xml = new ActiveXObject("Microsoft.XMLDOM");
-                    xml.async = false;
-                    xml.loadXML(xhr.responseText);
                 }
 
                 var apps = xml.getElementsByTagName("app");
                 var output = "";
 
                 for (var i = 0; i < apps.length; i++) {
-                    var nameElement = apps[i].getElementsByTagName("name")[0];
-                    var categoryElement = apps[i].getElementsByTagName("category")[0];
-                    var iconElement = apps[i].getElementsByTagName("icon")[0];
-                    var publisherElement = apps[i].getElementsByTagName("publisher")[0];
-                    var descriptionElement = apps[i].getElementsByTagName("description")[0];
-                    var installElement = apps[i].getElementsByTagName("install")[0];
-                    
-                    var name = nameElement ? nameElement.textContent : "Unknown";
-                    var category = categoryElement ? categoryElement.textContent : "Unknown";
-                    var icon = iconElement ? iconElement.textContent : "icons/default.png";
-                    var publisher = publisherElement ? publisherElement.textContent : "Unknown Publisher";
-                    var description = descriptionElement ? descriptionElement.textContent : "No description available.";
-                    var installLink = installElement ? installElement.textContent : "#";
+
+		    if (i % 2 === 0) {
+
+        		output += '<div class="app-column">';
+		
+    }
+
+                    var name = apps[i].getElementsByTagName("name")[0] ? apps[i].getElementsByTagName("name")[0].textContent || apps[i].getElementsByTagName("name")[0].innerText : "Unknown";
+                    var category = apps[i].getElementsByTagName("category")[0] ? apps[i].getElementsByTagName("category")[0].textContent || apps[i].getElementsByTagName("category")[0].innerText : "Unknown";
+                    var icon = apps[i].getElementsByTagName("icon")[0] ? apps[i].getElementsByTagName("icon")[0].textContent || apps[i].getElementsByTagName("icon")[0].innerText : "appRes/default.png";
+                    var publisher = apps[i].getElementsByTagName("publisher")[0] ? apps[i].getElementsByTagName("publisher")[0].textContent || apps[i].getElementsByTagName("publisher")[0].innerText : "Unknown Publisher";
+                    var description = apps[i].getElementsByTagName("description")[0] ? apps[i].getElementsByTagName("description")[0].textContent || apps[i].getElementsByTagName("description")[0].innerText : "No description available.";
+                    var installLink = apps[i].getElementsByTagName("install")[0] ? apps[i].getElementsByTagName("install")[0].textContent || apps[i].getElementsByTagName("install")[0].innerText : "#";
 
                     var featuresList = [];
                     var featureNodes = apps[i].getElementsByTagName("features")[0];
                     if (featureNodes) {
                         var featureElements = featureNodes.getElementsByTagName("feature");
                         for (var j = 0; j < featureElements.length; j++) {
-                            featuresList.push(featureElements[j].textContent);
+                            featuresList.push(featureElements[j].textContent || featureElements[j].innerText);
                         }
                     }
                     var features = featuresList.join(",");
 
+                    output += '<div class="app-wrapper">';
                     output += '<div class="app-box" onclick="redirectToAppPage(\'' + encodeURIComponent(name) + '\', \'' + encodeURIComponent(category) + '\', \'' + encodeURIComponent(icon) + '\', \'' + encodeURIComponent(publisher) + '\', \'' + encodeURIComponent(description) + '\', \'' + encodeURIComponent(features) + '\', \'' + encodeURIComponent(installLink) + '\')">';
                     output += '<img src="' + icon + '" alt="' + name + '">';
                     output += '<h3>' + name + '</h3>';
                     output += '<p>' + category + '</p>';
-                    output += '</div>';
+                    output += '</div></div>';
+
+		    // Close the vertical column after the second app
+
+		    if (i % 2 === 1 || i === apps.length - 1) {
+
+		        output += '</div>';
+		
+    }
                 }
                 document.getElementById("app-list").innerHTML = output;
             }
-        };
-        xhr.onerror = function () {
-            document.getElementById("app-list").innerHTML = "<p>Error loading app data.</p>";
         };
         xhr.send();
     }
 
     function redirectToAppPage(name, category, icon, publisher, description, features, install) {
-        var url = "appDesc.html?name=" + name + "&category=" + category + "&icon=" + icon + "&publisher=" + publisher + "&description=" + description + "&features=" + features + "&install=" + install;
-        window.location.href = url;
+        window.location.href = "appDesc.html?name=" + name + "&category=" + category + "&icon=" + icon + "&publisher=" + publisher + "&description=" + description + "&features=" + features + "&install=" + install;
     }
 
-    
-</script>
-
-
-<body>
-    <div class="header">
-	<div class="header-left">
-	    <img src="res/logo.png" alt="Store Logo">
-	    <a href="store.html" class="bgGreen"><h1>Home</h1></a>
-	    <a href="comingSoon.xaml" class="topLink"><h1>Top Charts</h1></a>
-	    <a href="comingSonn.xaml" class="topLink"><h1>Categories</h1></a>
-	    <a href="comingSoon.xaml" class="topLink"><h1>Collections</h1></a>
-	    <a href="account.html" class="topLink"><h1>Account</h1></a>
-	</div>
-	<div class="search-bar">
-    	<input type="text" id="search-input" onkeyup="searchApps()" placeholder="Search for apps...">
-        <a href="errorPage.xaml"><i class="fa fa-search"></i></a>
-	</div>
-    </div>
-    <h1 class="pageTitle">Store</h1>
-    <div id="app-list" class="store-container"></div>
-<script>
     window.onload = function() {
-        loadXML();
+        loadFeatured(); // Load Hero first
+        loadXML();      // Load App list
     };
 </script>
 </body>
