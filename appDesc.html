@@ -112,6 +112,10 @@
 #app-container li {
     margin-bottom: 4px;
 }
+.greenLink {
+    text-decoration: none;
+    color: #008A00;
+}
 </style>
 <script>
     function getUrlParams() {
@@ -156,7 +160,7 @@
             detailsRight.appendChild(publisherElement);
 
             var categoryElement = document.createElement("p");
-            categoryElement.innerHTML = "Category: " + category;
+            categoryElement.innerHTML = "Category " + '<a href="pages/categoryPage.html?category='+ category + '" class="greenLink">' + category + '</a>';
             detailsRight.appendChild(categoryElement);
         }
 
@@ -173,7 +177,7 @@
             installButton.className = "install-btn"; // Apply Metro styling
             appContainer.appendChild(installButton);
 
-            var priceLabel = document.createElement("h4");
+            var priceLabel = document.createElement("h2");
             priceLabel.innerText = "Free";
             appContainer.appendChild(priceLabel);
 
@@ -211,8 +215,8 @@
 	<div class="header-left">
 	    <img src="res/logo.png" alt="Store Logo">
 	    <a href="store.html" class="bgGreen"><h1>Home</h1></a>
-	    <a href="errorPage.xaml" class="topLink"><h1>Top Charts</h1></a>
-	    <a href="comingSoon.xaml" class="topLink"><h1>Categories</h1></a>
+	    <a href="pages/topcharts.html" class="topLink"><h1>Top Charts</h1></a>
+	    <a href="pages/categories.html" class="topLink"><h1>Categories</h1></a>
 	    <a href="comingSoon.xaml" class="topLink"><h1>Collections</h1></a>
 	    <a href="account.html" class="topLink"><h1>Account</h1></a>
 	</div>
